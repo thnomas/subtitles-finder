@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TG4 Irish Subtitles Finder</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Helvetica, sans-serif;
+  background: #111;
+  color: white;
+}
+
+header {
+  padding: 20px;
+  background: #000;
+  border-bottom: 3px solid #009639;
+}
+
+h1 {
+  margin: 0;
+}
+
+section {
+  padding: 20px;
+}
+
+h2 {
+  border-left: 6px solid #009639;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.row {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+}
+
+.card {
+  min-width: 220px;
+  background: #1c1c1c;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 10px;
+}
+
+.card a {
+  color: #00ff88;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.loading {
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>TG4: Irish Language Programmes with Irish Subtitles</h1>
+</header>
+
+<div id="genres">
+  <div class="loading">Loading programmes...</div>
+</div>
+
+<script>
+const API_KEY = "NQWJD9AVi}zKRFmi7D@m";
+
+const genres = [
+  "Documentaries",
+  "Music",
+  "Drama",
+  "news",
+  "Entertainment",
+  "Sport",
+  "lifestyle",
+  "Cula4"
+];
+
+async function loadAllGenres() {
+  document.querySelector(".loading").style.display = "none";
+
+  for (const genre of genres) {
+    await loadGenre(genre);
+  }
+}
+
+async function loadGenre(genre) {
+  try {
+
+    const encodedGenre = encodeURIComponent(genre);
+
+    const res = await fetch(
+      `https://playerapi.tg4tech.com/genres?genre=${encodedGenre}`,
+      { headers: { "x-api-key": API_KEY } }
+    );
+
+    const data = await res.json();
+    const videos = data.videos || data;
+
+    const filtered = videos.filter(video => {
+
+      const isIrish =
+        video.custom_fields?.language === "Gaeilge";
+
+      const hasIrishSubs =
+        video.text_tracks?.some(track =>
+          track.srclang?.startsWith("ga")
+        );
+
+      return isIrish && hasIrishSubs;
+    });
+
+    if (!filtered.length) return;
+
+    // Deduplicate by series title
+    const uniqueSeries = {};
+    filtered.forEach(video => {
+      const title =
+        video.custom_fields?.seriestitle || video.name;
+      if (!uniqueSeries[title]) {
+        uniqueSeries[title] = video;
+      }
+    });
+
+    createGenreSection(genre, Object.values(uniqueSeries));
+
+  } catch (err) {
+    console.error("Error loading genre:", genre, err);
+  }
+}
+
+function createGenreSection(genre, videos) {
+
+  const container = document.getElementById("genres");
+
+  const section = document.createElement("section");
+
+  section.innerHTML = `
+    <h2>${genre}</h2>
+    <div class="row"></div>
+  `;
+
+  const row = section.querySelector(".row");
+
+  videos.forEach(video => {
+
+    const title =
+      video.custom_fields?.seriestitle || video.name;
+
+    const isGeoLocked = video.custom_fields?.geo_restrict === "Y";
+
+    const watchLink =
+      `https://www.tg4.ie/en/player/categories/?pid=${video.id}`;
+
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${video.poster || ''}" alt="">
+      <div class="card-content">
+        <strong>${title}</strong><br>
+        <a href="${watchLink}" target="_blank">
+          Watch on TG4 →
+        </a>
+      </div>
+    `;
+
+    row.appendChild(card);
+  });
+
+  container.appendChild(section);
+}
+
+loadAllGenres();
+</script>
+
+</body>
+</html>
