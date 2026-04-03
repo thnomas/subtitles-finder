@@ -12,7 +12,7 @@ const genres = [
 ];
 
 // State
-let showOnlySubs = false;
+let showOnlySubs = true;
 let allData = {};
 
 // Load all genres
