@@ -1,0 +1,76 @@
+@font-face {
+    font-family: 'DubhchloGC-Regular';
+    src: url('DubhchloGC-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+span {
+    font-size: larger;
+}
+
+body {
+    margin: 0;
+    font-family: Helvetica, sans-serif;
+    background: #111;
+    color: white;
+}
+
+header {
+    padding: 20px;
+    background: #000;
+    border-bottom: 3px solid #009639;
+}
+
+h1 {
+    margin: 0;
+    font-family: 'DubhchloGC-Regular';
+}
+
+section {
+    padding: 20px;
+}
+
+h2 {
+    border-left: 6px solid #009639;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.row {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+}
+
+.card {
+    min-width: 220px;
+    background: #1c1c1c;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 10px;
+}
+
+.card a {
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.loading {
+    padding: 20px;
+}
