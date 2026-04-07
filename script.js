@@ -36,6 +36,10 @@ async function loadGenre(genre) {
       { headers: { "x-api-key": API_KEY } }
     );
 
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
     const data = await res.json();
     const videos = data.videos || data;
 
@@ -43,18 +47,29 @@ async function loadGenre(genre) {
     allData[genre.key] = videos;
 
   } catch (err) {
-    console.error("Error loading genre:", genre, err);
+    console.error("Error loading genre:", genre.key, err);
+    allData[genre.key] = null;
   }
 }
 
 // Render everything
 function render() {
+  let hasAnyData = false;
+  let hasError = false;
   const container = document.getElementById("genres");
   container.innerHTML = "";
 
   for (const genre of genres) {
     const videos = allData[genre.key];
-    if (!videos) continue;
+
+  if (videos === null) {
+    hasError = true;
+    continue;
+  }
+
+  if (!videos) continue;
+
+  hasAnyData = true;
 
     const filtered = videos.filter((video) => {
 
@@ -87,6 +102,24 @@ function render() {
     });
 
     createGenreSection(genre , Object.values(uniqueSeries));
+  }
+
+    // Handle empty / error states
+  if (!hasAnyData) {
+    if (hasError) {
+      container.innerHTML = `
+        <div class="error">
+          💀 Bad news, something has gone <i><u>very</u></i> wrong! 💀<br><br>
+          <img src="https://img.gifglobe.com/grabs/fatherted/S03E03/gif/mkp0X6IkDr35.gif">
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="error">
+          No programmes found.
+        </div>
+      `;
+    }
   }
 }
 
