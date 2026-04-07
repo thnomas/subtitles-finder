@@ -1,21 +1,19 @@
 @font-face {
     font-family: 'DubhchloGC-Regular';
     src: url('DubhchloGC-Regular.woff2') format('woff2');
-    font-weight: normal;
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 input[type="checkbox"] {
     accent-color: rgb(255, 255, 255);
 }
 
-label{
-    font-family: 'DubhchloGC-Regular';
-}
-
 body {
     margin: 0;
     font-family: "Poppins", sans-serif;
+    line-height: 1.5;
 }
 
 header {
@@ -36,13 +34,15 @@ section {
 h2 {
     border-left: 6px solid #696;
     padding-left: 10px;
-    margin-bottom: 15px;
+    margin: 0 0 15px;
 }
 
 .row {
     display: flex;
-    overflow-x: auto;
     gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
 }
 
 .card {
@@ -50,11 +50,12 @@ h2 {
     background: #f0f0f0;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .card img {
@@ -64,8 +65,7 @@ h2 {
 }
 
 .card-content {
-    padding: 10px;
-    padding-bottom: 20px;
+    padding: 10px 10px 20px;
 }
 
 .card a {
@@ -78,6 +78,20 @@ h2 {
     padding: 20px;
 }
 
-span {
-    font-weight: bolder;
+.toggle-label {
+    font-weight: 700;
+    font-family: 'DubhchloGC-Regular';
+}
+
+.visually-hidden {
+    font-weight: 700;
+}
+
+.icon {
+    font-weight: 900;
+}
+
+a:focus-visible,
+input:focus-visible {
+    outline-offset: 2px;
 }
