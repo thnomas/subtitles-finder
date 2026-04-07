@@ -95,3 +95,10 @@ a:focus-visible,
 input:focus-visible {
     outline-offset: 2px;
 }
+
+.en {
+    color:rgb(83, 83, 83);
+    font-weight: 600;
+    font-size: medium;
+    vertical-align:middle;
+}

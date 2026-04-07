@@ -1,14 +1,14 @@
 const API_KEY = "NQWJD9AVi}zKRFmi7D@m";
 
 const genres = [
-  "Documentaries",
-  "Drama",
-  "Entertainment",
-  "Lifestyle",
-  "Music",
-  "News",
-  "Sport",
-  "Cula4",
+  { key: "Documentaries", ga: "Faisnéis", en:"Documentaries"},
+  { key: "Drama", ga: "Drámaíocht", en:"Drama"},
+  { key: "Entertainment", ga: "Siamsaíocht", en:"Entertainment"},
+  { key: "Lifestyle", ga: "Saolchláir", en:" Lifestyle" },
+  { key: "Music", ga: "Ceol", en:" Music" },
+  { key: "News", ga: "Cúrsaí Reatha", en:" Current Affairs" },
+  { key: "Sport", ga: "Spórt", en:"Sport" },
+  { key: "Cula4", ga: "Cúla4", en:"Cúla4"},
 ];
 
 // State
@@ -29,7 +29,7 @@ async function loadAllGenres() {
 // Fetch each genre
 async function loadGenre(genre) {
   try {
-    const encodedGenre = encodeURIComponent(genre);
+    const encodedGenre = encodeURIComponent(genre.key);
 
     const res = await fetch(
       `https://playerapi.tg4tech.com/genres?genre=${encodedGenre}`,
@@ -40,7 +40,7 @@ async function loadGenre(genre) {
     const videos = data.videos || data;
 
     // Store raw data (no filtering yet)
-    allData[genre] = videos;
+    allData[genre.key] = videos;
 
   } catch (err) {
     console.error("Error loading genre:", genre, err);
@@ -53,7 +53,7 @@ function render() {
   container.innerHTML = "";
 
   for (const genre of genres) {
-    const videos = allData[genre];
+    const videos = allData[genre.key];
     if (!videos) continue;
 
     const filtered = videos.filter((video) => {
@@ -86,7 +86,7 @@ function render() {
       }
     });
 
-    createGenreSection(genre, Object.values(uniqueSeries));
+    createGenreSection(genre , Object.values(uniqueSeries));
   }
 }
 
@@ -97,7 +97,7 @@ function createGenreSection(genre, videos) {
   const section = document.createElement("section");
 
   section.innerHTML = `
-    <h2>${genre}</h2>
+    <h2>${genre.ga} <span class="en"> > ${genre.en}</span></h2>
     <div class="row"></div>
   `;
 
